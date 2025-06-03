@@ -1,8 +1,7 @@
-// NEWS_API_KEY=03157df20f5d45eabd8f184a7e36fd90
+require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-require("dotenv").config();
 
 const app = express();
 app.use(cors());
@@ -17,13 +16,21 @@ app.get("/api/news", async (req, res) => {
       country: "us",
       apiKey: process.env.NEWS_API_KEY,
     };
+
     if (req.query.category) {
       params.category = req.query.category;
     }
 
     const response = await axios.get("https://newsapi.org/v2/top-headlines", {
       params,
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+          "(KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+        Accept: "application/json",
+      },
     });
+
     res.json(response.data);
   } catch (error) {
     console.error("News API Error:", error.response?.data || error.message);
